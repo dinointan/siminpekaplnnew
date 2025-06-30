@@ -1,0 +1,118 @@
+<?php
+
+use App\Exports\MutasiPerabotanExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PerabotanExport;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AbsenceController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MutasiPerabotanController;
+use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PerabotanController;
+
+
+use App\Http\Controllers\ScanController;
+use App\Http\Middleware\IsSupervisor;
+use App\Models\Kategori;
+use App\Models\Pengguna;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Route;
+
+
+Route::get('/tes-qr', function () {
+    $kode = 'PB-9999';
+    $qrCode = QrCode::format('png')->size(200)->generate($kode);
+    return '<img src="data:image/png;base64,' . base64_encode($qrCode) . '" />';
+});
+
+// Route::middleware('guest')->group(function () {
+Route::get('/cek-login', function () {
+    dd(Auth::check(), Auth::user());
+});
+
+
+// Authentication routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+
+// Scan routes
+Route::get('/scan', [ScanController::class, 'index'])->name('scan');
+Route::post('/scan-result', [ScanController::class, 'result'])->name('scan.result');
+// });
+
+// Logout route
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+// qrode routes
+
+
+// Export route
+Route::get('/perabotan/export', [PerabotanController::class, 'export'])->name('perabotan.export');
+
+
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::group(['prefix' => 'inventory'], function () {
+        Route::resource('kategori', CategoryController::class)->except('show');
+        Route::resource('lokasi', LocationController::class);
+        Route::resource('mutasi', MutasiPerabotanController::class);
+
+
+    });
+
+    Route::resource('pengguna', PenggunaController::class)->except('show')->middleware(IsSupervisor::class);
+    Route::get('/pengguna/{pengguna}', [PenggunaController::class, 'show']);
+    Route::get('/pengguna/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pengguna.edit');
+    Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+
+
+    //Profile routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    //Mutasi Perabotan routes
+    Route::get('mutasi', [MutasiPerabotanController::class, 'index'])->name('mutasi.index');
+    Route::get('mutasi/create', [MutasiPerabotanController::class, 'create'])->name('mutasi.create');
+    Route::post('mutasi', [MutasiPerabotanController::class, 'store'])->name('mutasi.store');
+    Route::get('/mutasi/export', function (\Illuminate\Http\Request $request) {
+        $type = $request->query('type', 'xlsx');
+
+        if (!in_array($type, ['xlsx', 'csv', 'xls'])) {
+            abort(400, 'Tipe file tidak valid.');
+        }
+        return Excel::download(new MutasiPerabotanExport, 'mutasi.' . $type);
+    });
+    // Edit mutasi (manual seperti profile)
+    Route::get('mutasi/{mutasi}/edit', [MutasiPerabotanController::class, 'edit'])->name('mutasi.edit');
+    Route::put('mutasi/{mutasi}', [MutasiPerabotanController::class, 'update'])->name('mutasi.update');
+
+    Route::get('/perabotan/detail/{kode}', [PerabotanController::class, 'detailByKode'])->name('perabotan.detail');
+    Route::get('/perabotan/qrcode', [PerabotanController::class, 'getQrCode'])->name('perabotan.qrcode');
+
+    Route::resource('perabotan', PerabotanController::class);
+
+    Route::get('/perabotan/export', function (Request $request) {
+        $type = $request->query('type', 'xlsx'); // INI AKAN BERFUNGSI setelah import benar
+
+        if (!in_array($type, ['xlsx', 'csv', 'xls'])) {
+            abort(400, 'Tipe file tidak valid.');
+        }
+        return Excel::download(new \App\Exports\PerabotanExport, 'perabotan.' . $type);
+    });
+
+});
+
+require __DIR__ . '/auth.php';
