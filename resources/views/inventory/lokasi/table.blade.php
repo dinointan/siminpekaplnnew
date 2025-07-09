@@ -16,7 +16,7 @@
                 @if ($type != 'export')
                     <td style="width: 25%;" class="text-center">
                         <a href="{{ route('lokasi.edit', $lokasi->id) }}"
-                            class="btn btn-sm rounded-3 text-white btn-success">
+                            class="btn btn-sm rounded-3 text-white btn-warning">
                             <i class="fas fa-edit"></i>
                             Ubah
                         </a>

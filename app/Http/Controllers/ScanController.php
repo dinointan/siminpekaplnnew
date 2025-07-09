@@ -15,15 +15,18 @@ class ScanController extends Controller
     public function result(Request $request)
     {
         $kode = $request->input('kode');
-        $perabot = Perabotan::where('kode', $kode)->first();
 
-        if (!$perabot) {
-            return response()->json(['status' => 'not_found']);
+        $perabotan = Perabotan::where('kode', $kode)->first();
+
+        if (!$perabotan) {
+            return response()->json(['status' => 'error', 'message' => 'Perabotan tidak ditemukan']);
         }
+
+        $url = route('perabotan.detail', ['kode' => $perabotan->kode]);
 
         return response()->json([
             'status' => 'success',
-            'data' => $perabot
+            'url' => $url
         ]);
     }
 

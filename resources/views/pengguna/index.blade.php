@@ -6,7 +6,7 @@
     <x-slot:styles>
         <link rel="stylesheet" href="{{ asset('assets/css/datatables.css') }}">
     </x-slot:styles>
-    <x-slot:title>Daftar Pengguna</x-slot:title>
+    <x-slot:title>Daftar User Pengguna</x-slot:title>
     <div class="row">
         <div class="col-md-12">
             @if (session('success'))
@@ -26,7 +26,7 @@
                 <div class="card-header">
                     <x-export-button></x-export-button>
                     <a class="btn btn-primary float-end rounded-2" href="{{ route('pengguna.create') }}">Tambah
-                        Pengguna</a>
+                        User Pengguna</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -38,80 +38,115 @@
     </div>
 
     <!-- Modal Detail -->
-    <div class="modal fade" id="detail-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="detail-modal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Detail Pengguna</h5>
+
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="detailModalLabel">Detail User Pengguna</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>ID Pengguna</b></label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" id="modal_id_pengguna"
-                                    readonly></div>
-                        </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Nama Pengguna</b></label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" id="modal_nama_pengguna"
-                                    readonly></div>
-                        </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Username</b></label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" id="modal_username"
-                                    readonly></div>
-                        </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Role</b></label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" id="modal_role" readonly>
+                    <div class="container-fluid">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>ID User Pengguna</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_id_pengguna" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Divisi</b></label></div>
-                            <div class="col-md-8"><input type="text" class="form-control" id="modal_divisi" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Nama User Pengguna</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_nama_pengguna" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Foto</b></label></div>
-                            <div class="col-md-8">
-                                <img src="{{ asset('assets/images/users/default.jpg') }}" id="modal_foto"
-                                    alt="Foto Pengguna" width="100">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Username</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_username" class="form-control" readonly>
                             </div>
                         </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Role</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_role" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Divisi</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_divisi" class="form-control" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Foto</strong></label>
+                            <div class="col-sm-9">
+                                <img id="foto" src="" alt="Foto Pengguna"
+                                    style="width: 80px; height: 80px; object-fit: cover;" class="img-thumbnail">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
+
             </div>
         </div>
     </div>
-
 
     <script>
         $(document).ready(function() {
             $('#pengguna_table').DataTable({
                 language: datatableLanguageOptions,
-                ordering: true 
+                ordering: true
+            });
+
+            // Event listener tombol detail (versi jQuery)
+            $(document).on('click', '.detail-btn', function() {
+                $('#modal_id_pengguna').val($(this).data('id_pengguna') || '-');
+                $('#modal_nama_pengguna').val($(this).data('nama_pengguna') || '-');
+                $('#modal_username').val($(this).data('username') || '-');
+                $('#modal_role').val($(this).data('role') || '-');
+                $('#modal_divisi').val($(this).data('divisi') || '-');
+
+                const foto = $(this).data('foto');
+                if (foto) {
+                    $('#foto').attr('src', '/assets/images/pengguna/' + foto);
+                } else {
+                    $('#foto').attr('src', '');
+                }
+            });
+
+            // Event listener tombol detail (versi native JS)
+            document.querySelectorAll('.detail-pengguna-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const nama = this.getAttribute('data-nama');
+                    const username = this.getAttribute('data-username');
+                    const role = this.getAttribute('data-role') || '-';
+                    const divisi = this.getAttribute('data-divisi') || '-';
+
+                    document.getElementById('modal-nama').textContent = nama;
+                    document.getElementById('modal-username').textContent = username;
+                    document.getElementById('modal-role').textContent = role;
+                    document.getElementById('modal-divisi').textContent = divisi;
+                });
             });
         });
 
-
-        $(document).on('click', '.detail-btn', function() {
-            $('#modal_id_pengguna').val($(this).data('id_pengguna') || '-');
-            $('#modal_nama_pengguna').val($(this).data('nama_pengguna') || '-');
-            $('#modal_username').val($(this).data('username') || '-');
-            $('#modal_role').val($(this).data('role') || '-');
-            $('#modal_divisi').val($(this).data('divisi') || '-');
-
-            const foto = $(this).data('foto');
-            if (foto) {
-                $('#modal_foto').attr('src', '/storage/' + foto); // atau tambahkan subfolder
-            } else {
-                $('#modal_foto').attr('src', '/assets/images/users/default.jpg');
-            }
-
-        });
+        // Fungsi export pengguna
+        function exportData(type) {
+            window.location.href = "/pengguna/export?type=" + type;
+        }
     </script>
+
 </x-layout>

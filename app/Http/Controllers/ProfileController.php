@@ -38,22 +38,23 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        // Validasi dinamis
+        $user = Auth::user();
+
+        // Validasi input
         $rules = [
             'name' => 'required|max:255|string',
-            'username' => 'required|alpha_dash|string|max:255|unique:users,username,' . Auth::id(),
+            'username' => 'required|alpha_dash|string|max:255|unique:users,username,' . $user->id,
             'divisi' => 'nullable|string|max:255',
             'picture' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ];
 
-        // Validasi password hanya jika diisi
         if ($request->filled('password')) {
             $rules['password'] = ['confirmed', Rules\Password::defaults()];
         }
 
         $request->validate($rules);
 
-        $user = User::find(Auth::id());
+        // Update user data
         $user->name = $request->name;
         $user->username = $request->username;
         $user->divisi = $request->divisi;
@@ -62,13 +63,19 @@ class ProfileController extends Controller
             $user->password = bcrypt($request->password);
         }
 
+        // Handle foto upload jika ada
         if ($request->hasFile('picture')) {
-            if ($user->picture !== 'profile.jpg') {
-                File::delete(public_path('assets/images/users/' . $user->picture));
+            // Hapus foto lama jika bukan default
+            if ($user->foto && $user->foto !== 'profile.jpg') {
+                File::delete(public_path('assets/images/pengguna/' . $user->foto));
             }
-            $filename = time() . '.' . $request->picture->extension();
-            $request->picture->move(public_path('assets/images/users'), $filename);
-            $user->picture = $filename;
+
+            // Simpan foto baru
+            $file = $request->file('picture');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/pengguna'), $filename);
+
+            $user->foto = $filename;
         }
 
         $user->save();

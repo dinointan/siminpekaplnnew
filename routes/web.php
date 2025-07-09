@@ -28,14 +28,17 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/tes-qr', function () {
-    $kode = 'PB-9999';
-    $qrCode = QrCode::format('png')->size(200)->generate($kode);
-    return '<img src="data:image/png;base64,' . base64_encode($qrCode) . '" />';
+    return view('test-qr');
 });
+
+// Route Public untuk QR Code
+Route::get('/perabotan/qrcode/{kode}', [PerabotanController::class, 'qrcodeByKode'])->name('perabotan.qrcode');
+Route::get('/perabotan/qrcode-generate', [App\Http\Controllers\PerabotanController::class, 'generateQrCode']);
+
 
 // Route::middleware('guest')->group(function () {
 Route::get('/cek-login', function () {
-    dd(Auth::check(), Auth::user());
+    dd(\Illuminate\Support\Facades\Auth::check(), \Illuminate\Support\Facades\Auth::user());
 });
 
 
@@ -45,8 +48,14 @@ Route::post('/login', [LoginController::class, 'login']);
 
 // Scan routes
 Route::get('/scan', [ScanController::class, 'index'])->name('scan');
-Route::post('/scan-result', [ScanController::class, 'result'])->name('scan.result');
+Route::post('/scan-result', [PerabotanController::class, 'scan'])->name('scan.result');
+
+//cetakqr
+Route::get('/perabotan/cetakqr/{kode}', [PerabotanController::class, 'cetakqr'])->name('perabotan.cetakqr');
+
+
 // });
+Route::get('/public/perabotan/{kode}/detail', [PerabotanController::class, 'publicDetail'])->name('perabotan.public.detail');
 
 // Logout route
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
@@ -55,6 +64,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth')->
 
 
 // Export route
+Route::get('/pengguna/export', [PenggunaController::class, 'export'])->name('pengguna.export');
 Route::get('/perabotan/export', [PerabotanController::class, 'export'])->name('perabotan.export');
 
 
@@ -99,8 +109,9 @@ Route::middleware('auth')->group(function () {
     Route::get('mutasi/{mutasi}/edit', [MutasiPerabotanController::class, 'edit'])->name('mutasi.edit');
     Route::put('mutasi/{mutasi}', [MutasiPerabotanController::class, 'update'])->name('mutasi.update');
 
-    Route::get('/perabotan/detail/{kode}', [PerabotanController::class, 'detailByKode'])->name('perabotan.detail');
+
     Route::get('/perabotan/qrcode', [PerabotanController::class, 'getQrCode'])->name('perabotan.qrcode');
+    Route::get('/perabotan/detail/{kode}', [PerabotanController::class, 'detailByKode'])->name('perabotan.detail');
 
     Route::resource('perabotan', PerabotanController::class);
 

@@ -7,7 +7,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
-    <title>PT PLN (Persero) ULP Ahmad Yani Banjarmasin</title>
+    <title>PLN SIMINPEKA</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="20x26" href="/assets/images/Logo_PLN.png">
     <!-- Custom CSS -->
@@ -139,7 +139,7 @@
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
                                 href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <img src="{{ asset('assets/images/pengguna/' . (auth()->user()->picture ?? 'default.png')) }}"
+                                <img src="{{ asset('assets/images/pengguna/' . (auth()->user()->foto ?? 'default.png')) }}"
                                     alt="user" class="rounded-circle" width="31">
                                 <span class="fw-bold text-white mx-2">{{ auth()->user()->name }}</span>
                             </a>
@@ -182,12 +182,15 @@
                                 <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->is('user/*') ? 'selected' : '' }}">
-                            <a class="sidebar-link waves-effect waves-dark " href="{{ route('pengguna.index') }}"
-                                aria-expanded="false">
-                                <i class="mdi mdi-account-multiple"></i><span class="hide-menu">Pengguna</span>
-                            </a>
-                        </li>
+                        @if (auth()->user()->role == 'admin')
+                            <li class="sidebar-item {{ request()->is('user/*') ? 'selected' : '' }}">
+                                <a class="sidebar-link waves-effect waves-dark " href="{{ route('pengguna.index') }}"
+                                    aria-expanded="false">
+                                    <i class="mdi mdi-account-multiple"></i><span class="hide-menu">User
+                                        Pengguna</span>
+                                </a>
+                            </li>
+                        @endif
                         <li class="sidebar-item {{ request()->is('inventory/*') ? 'selected' : '' }}">
                             <a class="sidebar-link has-arrow waves-effect waves-dark " href="javascript:void(0)"
                                 aria-expanded="false">
@@ -196,57 +199,61 @@
                             </a>
                             <ul aria-expanded="false"
                                 class="collapse first-level {{ request()->is('inventory/*') ? 'in' : '' }}">
-                                <li class="sidebar-item">
-                                    <a href="{{ route('kategori.index') }}"
-                                        class="sidebar-link {{ request()->is('inventory/category/*') ? 'active' : '' }}">
-                                        <i class="mdi mdi-format-list-bulleted-type"></i>
-                                        <span class="hide-menu">Kategori</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="{{ route('lokasi.index') }}"
-                                        class="sidebar-link {{ request()->is('inventory/lokasi/*') ? 'active' : '' }}">
-                                        <i class="mdi mdi-map-marker"></i>
-                                        <span class="hide-menu">Lokasi</span>
-                                    </a>
-                                </li>
+                                @if (auth()->user()->role !== 'pegawai')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('kategori.index') }}"
+                                            class="sidebar-link {{ request()->is('inventory/category/*') ? 'active' : '' }}">
+                                            <i class="mdi mdi-format-list-bulleted-type"></i>
+                                            <span class="hide-menu">Kategori</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('lokasi.index') }}"
+                                            class="sidebar-link {{ request()->is('inventory/lokasi/*') ? 'active' : '' }}">
+                                            <i class="mdi mdi-map-marker"></i>
+                                            <span class="hide-menu">Lokasi</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item {{ request()->is('inventory/item/*') ? 'active' : '' }}">
+                                        <a href="{{ route('mutasi.index') }}" class="sidebar-link ">
+                                            <i class="mdi mdi-swap-horizontal"></i>
+                                            <span class="hide-menu">Mutasi Perabotan</span>
+                                        </a>
+                                    </li>
+                                @endif
                                 <li class="sidebar-item {{ request()->is('inventory/item/*') ? 'active' : '' }}">
                                     <a href="{{ route('perabotan.index') }}" class="sidebar-link ">
                                         <i class="mdi mdi-package-variant-closed"></i>
                                         <span class="hide-menu">Data Perabotan</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-item {{ request()->is('inventory/item/*') ? 'active' : '' }}">
-                                    <a href="{{ route('mutasi.index') }}" class="sidebar-link ">
-                                        <i class="mdi mdi-swap-horizontal"></i>
-                                        <span class="hide-menu">Mutasi Perabotan</span>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         {{-- @if (auth()->user()->role == 'owner' || auth()->user()->role == 'supervisor')
                         @endif --}}
-                        <li class="sidebar-item {{ request()->is('profile/*') ? 'selected' : '' }}">
-                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
-                                aria-expanded="false">
-                                <i class="mdi mdi-account"></i>
-                                <span class="hide-menu">Profil</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item">
-                                    <a href="{{ route('profile.show') }}" class="sidebar-link">
-                                        <i class="mdi mdi-account-circle"></i>
-                                        <span class="hide-menu">Profil Saya</span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="{{ route('profile.edit') }}" class="sidebar-link">
-                                        <i class="mdi mdi-account-edit"></i>
-                                        <span class="hide-menu">Ubah Profil</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (auth()->user()->role !== 'admin')
+                            <li class="sidebar-item {{ request()->is('profile/*') ? 'selected' : '' }}">
+                                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                                    aria-expanded="false">
+                                    <i class="mdi mdi-account"></i>
+                                    <span class="hide-menu">Profil</span>
+                                </a>
+                                <ul aria-expanded="false" class="collapse first-level">
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('profile.show') }}" class="sidebar-link">
+                                            <i class="mdi mdi-account-circle"></i>
+                                            <span class="hide-menu">Profil Saya</span>
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('profile.edit') }}" class="sidebar-link">
+                                            <i class="mdi mdi-account-edit"></i>
+                                            <span class="hide-menu">Ubah Profil</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)"
                                 aria-expanded="false" onclick="document.getElementById('logout').submit()">
@@ -293,8 +300,7 @@
             <!-- ============================================================== -->
             <br>
             <footer class="footer text-center">
-                All Rights Reserved by Matrix-admin. Designed and Developed by <a href="https://athatsaqif.com">Atha
-                    Tsaqif</a>.
+                All Rights Reserved by PLN SIMINPEKA.
             </footer>
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -394,30 +400,6 @@
                 };
                 reader.readAsDataURL(input.files[0]);
             }
-        }
-
-        function set_indo_currency(el) {
-            $(el).val(indo_currency(parseInt($(el).val().replaceAll('.', ''))));
-        }
-
-        function indo_currency(number, prefix) {
-            var original_number = number;
-            number = number < 0 ? parseInt(original_number.toString().replace('-', '')) : original_number;
-
-            var number_string = number.toString(),
-                split = number_string.split(','),
-                remains = split[0].length % 3,
-                rupiah = split[0].substr(0, remains),
-                thousand = split[0].substr(remains).match(/\d{3}/gi);
-
-            if (thousand) {
-                separator = remains ? '.' : '';
-                rupiah += separator + thousand.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            rupiah = original_number < 0 ? '-' + rupiah : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
 </body>

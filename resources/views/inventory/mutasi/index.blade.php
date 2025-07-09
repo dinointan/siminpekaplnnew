@@ -28,71 +28,83 @@
     <div class="modal fade" id="detail-modal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">Detail Perabotan</h5>
+
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="detailModalLabel">Detail Mutasi Perabotan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>ID Perabotan</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_id_perabotan" readonly>
+                    <div class="container-fluid">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>ID Perabotan</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_id_perabotan" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Nama Perabotan</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_nama_perabotan" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Nama Perabotan</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_nama_perabotan" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Kategori</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_kategori" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Kategori</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_kategori" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Lokasi Asal</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_lokasi_awal" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Lokasi Asal</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_lokasi_awal" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Lokasi Tujuan</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_lokasi_tujuan" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Lokasi Tujuan</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_lokasi_tujuan" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Tahun Pengadaan</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_tahun" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Tahun Pengadaan</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_tahun" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Keterangan</b></label></div>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" id="modal_kondisi_perabotan" readonly>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Keterangan</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_kondisi_perabotan" class="form-control" readonly>
                             </div>
                         </div>
-                        <div class="row align-items-center mt-2">
-                            <div class="col-md-4"><label><b>Foto</b></label></div>
-                            <div class="col-md-8">
-                                <img src="{{ asset('assets/images/users/default.jpg') }}" id="modal_foto"
-                                    alt="Foto Perabotan" width="100">
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Foto</strong></label>
+                            <div class="col-sm-9">
+                                <img id="foto" src="" alt="Foto Pengguna"
+                                    style="width: 80px; height: 80px; object-fit: cover;" class="img-thumbnail">
                             </div>
                         </div>
+
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
+
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -117,9 +129,9 @@
 
                 const foto = $(this).data('foto');
                 if (foto) {
-                    $('#modal_foto').attr('src', '/storage/' + foto);
+                    $('#foto').attr('src', '/assets/images/items/' + foto);
                 } else {
-                    $('#modal_foto').attr('src', '/assets/images/users/default.jpg');
+                    $('#foto').attr('src', '');
                 }
             });
         });

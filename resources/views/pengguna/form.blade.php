@@ -18,7 +18,7 @@
                         <div class="form-group">
                             <label for="name">Nama <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                id="name" name="name" value="{{ old('name', $pengguna->name) }}" required>
+                                id="name" name="name" required>
                             @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -29,20 +29,8 @@
                         <div class="form-group">
                             <label for="username">Username <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                id="username" name="username" value="{{ old('username', $pengguna->username) }}"
-                                required>
+                                id="username" name="username" required>
                             @error('username')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                id="email" name="email" value="{{ old('email', $pengguna->email) }}" required>
-                            @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -83,7 +71,7 @@
                                 <option value="Sales Retail"
                                     {{ old('divisi', $pengguna->divisi) == 'Sales Retail' ? 'selected' : '' }}>Sales
                                     Retail</option>
-                                <option value="Teknik"
+                                <option value="Teknik"git v
                                     {{ old('divisi', $pengguna->divisi) == 'Teknik' ? 'selected' : '' }}>Teknik
                                 </option>
                                 <option value="Transaksi Energi Listrik"

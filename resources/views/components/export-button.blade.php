@@ -1,9 +1,11 @@
-<button class="btn btn-secondary" id="excel" onclick="exportData('xlsx')" tabindex="10">
+<!-- Di halaman pengguna -->
+<button class="btn btn-success text-white" onclick="exportData('xlsx')" data-export-url="/pengguna/export">
     Export ke Excel
 </button>
-
 <script>
     function exportData(type) {
-        window.location.href = "/perabotan/export?type=" + type;
+        const button = event.currentTarget;
+        const baseUrl = button.getAttribute('data-export-url');
+        window.location.href = `${baseUrl}?type=${type}`;
     }
 </script>

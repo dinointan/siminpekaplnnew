@@ -15,7 +15,7 @@ class Lokasi extends Model
 
     public function lokasi()
     {
-        return $this->belongsTo(Lokasi::class, 'id_lokasi', 'id_lokasi');
+        return $this->belongsTo(Lokasi::class, 'id', 'id');
     }
     public function kategori()
     {

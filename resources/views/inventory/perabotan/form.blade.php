@@ -121,16 +121,16 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <img src="/assets/images/perabotans/{{ $perabotan->foto ?? 'default.png' }}">
+                                    @if (!empty($perabotan?->foto))
+                                        <img src="{{ asset('assets/images/items/' . $perabotan->foto) }}" width="100" id="img-preview">
+                                    @endif
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <label for="foto" class="form-label">Foto <span class="text-muted"> (kosongkan
-                                                jika
-                                                tidak ingin
-                                                diubah)</span></label>
+                                        <label for="foto" class="form-label">Foto <span class="text-muted">(kosongkan
+                                                jika tidak ingin diubah)</span></label>
                                         <input class="form-control @error('foto') is-invalid @enderror" type="file"
-                                            id="foto" name="foto">
+                                            id="foto" name="foto" accept="image/*">
                                         @error('foto')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -139,6 +139,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </form>
                     </div>
@@ -157,13 +158,15 @@
                     $('#kode').val(generateCode());
                 });
 
-                $('#picture').change(function() {
-                    const file = $(this)[0].files[0];
-                    const fileReader = new FileReader();
-                    fileReader.onload = function(e) {
-                        $('#img-preview').attr('src', e.target.result);
+                $('#foto').change(function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const fileReader = new FileReader();
+                        fileReader.onload = function(e) {
+                            $('#img-preview').attr('src', e.target.result);
+                        }
+                        fileReader.readAsDataURL(file);
                     }
-                    fileReader.readAsDataURL(file);
                 });
 
                 $('#create-category-btn').click(function() {

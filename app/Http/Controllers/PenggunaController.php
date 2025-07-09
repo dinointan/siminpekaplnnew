@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
-
-
+use App\Exports\PenggunaExport;
+use Maatwebsite\Excel\Facades\Excel;
 class PenggunaController extends Controller
 {
     public function index()
@@ -47,70 +47,75 @@ class PenggunaController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $pengguna->id,
-            'email' => 'required|email|unique:users,email,' . $pengguna->id,
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
-
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
         ];
 
-        // Cek apakah user mengisi password baru
         if ($request->filled('password')) {
             $rules['password'] = 'nullable|string|min:6|confirmed';
         }
 
         $validated = $request->validate($rules);
 
-        // Update data pengguna
+        $foto = $pengguna->foto; // Default: pakai foto lama
+
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama
+            if ($pengguna->foto && File::exists(public_path('assets/images/pengguna/' . $pengguna->foto))) {
+                File::delete(public_path('assets/images/pengguna/' . $pengguna->foto));
+            }
+
+            $file = $request->file('foto');
+            $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
+            $filename = time() . '_' . $originalName;
+            $file->move(public_path('assets/images/pengguna'), $filename);
+            $foto = $filename;
+        }
+
         $pengguna->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
-            'email' => $validated['email'],
             'password' => $request->filled('password') ? Hash::make($request->password) : $pengguna->password,
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
+            'foto' => $foto,
         ]);
 
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
 
 
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
         ]);
 
         $foto = null;
+
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
+            $filename = time() . '_' . $originalName;
             $file->move(public_path('assets/images/pengguna'), $filename);
             $foto = $filename;
         }
 
-        // Simpan data ke database
         User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']), // Gunakan Hash
+            'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
             'foto' => $foto,
         ]);
-
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/images/pengguna'), $filename);
-            $validated['foto'] = $filename;
-        }
-        // Simpan foto jika ada  
 
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
@@ -118,7 +123,7 @@ class PenggunaController extends Controller
     public function destroy(User $pengguna)
     {
         // Jika ada file foto, hapus dari direktori
-        if ($pengguna->foto && File::exists(public_path('assets/images/pengguna/' . $pengguna->foto))) {
+        if ($pengguna->foto && $pengguna->foto !== '') {
             File::delete(public_path('assets/images/pengguna/' . $pengguna->foto));
         }
 
@@ -131,5 +136,16 @@ class PenggunaController extends Controller
             return redirect()->route('kategori.index')->with('error', 'Terjadi kesalahan saat menghapus kategori.');
         }
 
+    }
+
+    public function export(Request $request)
+    {
+        $type = $request->query('type', 'xlsx');
+
+        if (!in_array($type, ['xlsx', 'csv', 'xls'])) {
+            return redirect()->back()->with('status', 'Tipe export tidak valid.');
+        }
+
+        return Excel::download(new PenggunaExport, 'pengguna.' . $type);
     }
 }

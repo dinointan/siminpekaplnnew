@@ -33,8 +33,7 @@
                                     <div class="form-group mb-4">
                                         <label class="form-label"><b>Role</b></label>
                                         <input type="text" class="form-control"
-                                        value="{{ $user->role == 'pegawai' ? 'pegawai' : \Illuminate\Support\Str::ucfirst($user->role) }}"
-
+                                            value="{{ $user->role == 'pegawai' ? 'pegawai' : \Illuminate\Support\Str::ucfirst($user->role) }}"
                                             readonly>
                                     </div>
                                     <div class="form-group mb-4">
@@ -46,7 +45,8 @@
                             </div>
 
                             <div class="d-flex justify-content-end mt-4 mb-4 me-4">
-                                <a href="{{ route('profile.edit') }}" class="btn btn-primary rounded-3">
+                                <a href="{{ route('profile.edit') }}"
+                                    class="btn btn-sm rounded-3 text-white btn-warning">
                                     Ubah
                                 </a>
                             </div>

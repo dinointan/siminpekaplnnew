@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Perabotan;
-use App\Models\Kategori;
 use App\Models\Lokasi;
+use App\Models\Kategori;
+use App\Models\Perabotan;
+use Illuminate\View\View;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\File;
-use Illuminate\View\View;
-use Milon\Barcode\DNS1D;
+use Illuminate\Http\RedirectResponse;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Log;
 
 
 class PerabotanController extends Controller
@@ -30,19 +28,21 @@ class PerabotanController extends Controller
     ]);
   }
 
-  public function show(Perabotan $perabotan): string
-  {
-    return json_encode($perabotan);
-  }
+  // public function show(Perabotan $perabotan): string
+  // {
+  // return json_encode($perabotan);
+  // }
 
   public function create(): View
   {
     return view('inventory.perabotan.form', [
-      'lokasis' => Lokasi::orderBy('nama_lokasi')->get(), // ini penting!
+      'perabotan' => null,
+      'lokasis' => Lokasi::orderBy('nama_lokasi')->get(),
       'kategoris' => Kategori::all(),
       'type' => 'create',
     ]);
   }
+
 
   public function store(Request $request): RedirectResponse
   {
@@ -64,10 +64,10 @@ class PerabotanController extends Controller
     }
 
 
-    $foto_name = 'default.png';
+    $foto_name = '';
     if ($request->hasFile('foto')) {
       $filename = time() . '.' . $request->foto->extension();
-      $request->foto->move(public_path('/assets/images/furnitures/default.png'), $filename);
+      $request->foto->move(public_path('/assets/images/items'), $filename);
       $foto_name = $filename;
     }
 
@@ -87,24 +87,30 @@ class PerabotanController extends Controller
 
   public function edit(Perabotan $perabotan): View
   {
+    if (auth()->user()->role !== 'admin') {
+      abort(403, 'Akses ditolak.');
+    }
+
     return view('inventory.perabotan.form', [
       'perabotan' => $perabotan,
       'kategoris' => Kategori::orderBy('nama_kategori')->get(),
       'lokasis' => Lokasi::orderBy('nama_lokasi')->get(),
       'type' => 'edit'
     ]);
-
   }
 
 
   public function update(Request $request, Perabotan $perabotan): RedirectResponse
   {
+    if (auth()->user()->role !== 'admin') {
+      abort(403, 'Akses ditolak.');
+    }
     $request->validate([
       'kode' => 'required|string|max:255|unique:perabotans,kode,' . $perabotan->id,
       'nama' => 'required|string|max:255|unique:perabotans,nama,' . $perabotan->id,
       'kategori' => 'required|exists:kategoris,id',
       'tahun_pengadaan' => 'required|numeric|min:1',
-      'lokasi' => 'required|exists:lokasis,id_lokasi',
+      'lokasi' => 'required|exists:lokasis,id',
       'keterangan' => 'required|string|max:255',
       'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096'
     ]);
@@ -133,7 +139,10 @@ class PerabotanController extends Controller
 
   public function destroy(Perabotan $perabotan): RedirectResponse
   {
-    if ($perabotan->foto && $perabotan->foto !== 'default.png') {
+    if (auth()->user()->role !== 'admin') {
+      abort(403, 'Akses ditolak.');
+    }
+    if ($perabotan->foto && $perabotan->foto !== '') {
       File::delete(public_path('assets/images/items/' . $perabotan->foto));
     }
 
@@ -143,54 +152,74 @@ class PerabotanController extends Controller
   }
   public function scan(Request $request)
   {
-    $kode = $request->kode;
+    $url = $request->kode;
+    $kode = Str::before(Str::after($url, '/perabotan/'), '/detail');
+    $perabot = Perabotan::where('kode', $kode)->first();
 
-    $perabotan = Perabotan::where('kode', $kode)->first(); // ✅ ambil satu data
-
-    if ($perabotan) {
+    if ($perabot) {
       return response()->json([
         'status' => 'success',
-        'data' => [
-          'nama' => $perabotan->nama,
-          'lokasi' => $perabotan->lokasi->nama_lokasi ?? '-',
-          'url_detail' => route('perabotan.show', $perabotan->id)
-        ]
-      ]);
-    } else {
-      return response()->json([
-        'status' => 'error',
-        'message' => 'Perabot tidak ditemukan'
+        'url' => route('perabotan.public.detail', ['kode' => $perabot->kode])
       ]);
     }
+
+    return response()->json([
+      'status' => 'error',
+      'message' => 'Data tidak ditemukan'
+    ]);
   }
-  public function getQrCode(Request $request)
+
+
+  public function detailByKode($kode)
   {
-    $kode = $request->kode;
+    $perabotan = Perabotan::where('kode', $kode)->first();
 
-    if (!$kode) {
-      Log::error('Kode perabotan tidak ditemukan di request');
-      return response()->json(['error' => 'Kode tidak ditemukan'], 400);
-    }
+    $url = route('perabotan.public.detail', ['kode' => $perabotan->kode]);
 
-    try {
-      $image = base64_encode(QrCode::format('png')->size(200)->generate($kode));
+    $qrCode = QrCode::format('svg')->size(300)->generate($url);
 
-      return response()->json([
-        'kode' => $kode,
-        'image' => "data:image/png;base64,{$image}"
-      ]);
-    } catch (\Exception $e) {
-      Log::error('QR Code generation failed: ' . $e->getMessage());
-      return response()->json(['error' => 'QR Code gagal dibuat'], 500);
-    }
+
+    // if (!$perabotan) {
+    //   return response()->json(['error' => 'Kode tidak ditemukan'], 404);
+    // }
+
+    $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(200)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.detail', [
+      'perabotan' => $perabotan,
+      'qrCode' => $qrCode
+    ]);
   }
 
+  public function qrcodeByKode($kode)
+  {
+    $perabotan = Perabotan::where('kode', $kode)->firstOrFail();
+
+    $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(300)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.qrcode', [
+      'perabotan' => $perabotan,
+      'qrCode' => $qrCode
+    ]);
+  }
+
+  public function cetakqr($kode)
+  {
+    if (auth()->user()->role !== 'admin') {
+      abort(403, 'Akses ditolak.');
+    }
+    $perabotan = Perabotan::where('kode', $kode)->firstOrFail();
+
+    $qrCode = QrCode::size(200)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.cetakqr', compact('perabotan', 'qrCode'));
+  }
 
   public function export(Request $request)
   {
     $type = $request->get('type');
 
-    if ($type === 'excel') {
+    if ($type === 'xlsx') {
       // proses export Excel
     } elseif ($type === 'pdf') {
       // proses export PDF
@@ -198,4 +227,57 @@ class PerabotanController extends Controller
       return redirect()->back()->with('status', 'Tipe export tidak dikenali');
     }
   }
+  public function show($kode)
+  {
+    $perabotan = Perabotan::where('kode', $kode)->firstOrFail();
+
+    $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(200)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.show', compact('perabotan', 'qrCode'));
+  }
+  public function generateQrCode(Request $request)
+  {
+    $kode = $request->query('kode');
+
+    if (!$kode) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Kode tidak ditemukan.'
+      ]);
+    }
+
+    try {
+      $qr = QrCode::size(200)->generate($kode);
+
+      return response()->json([
+        'status' => 'success',
+        'image' => $qr
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'QR Code gagal dibuat: ' . $e->getMessage()
+      ]);
+    }
+  }
+  public function showPublic($kode)
+  {
+    $perabotan = Perabotan::where('kode', $kode)->firstOrFail();
+
+    $qrCode = QrCode::format('svg')->size(200)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.public_detail', [
+      'perabotan' => $perabotan,
+      'qrCode' => $qrCode
+    ]);
+  }
+  public function publicDetail($kode)
+  {
+    $perabotan = Perabotan::where('kode', $kode)->firstOrFail();
+    $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(200)->generate($perabotan->kode);
+
+    return view('inventory.perabotan.public_detail', compact('perabotan', 'qrCode'));
+  }
+
+
 }

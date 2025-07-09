@@ -2,8 +2,8 @@
     <thead class="text-primary">
         <tr>
             <th><b>No</b></th>
-            <th><b>ID Pengguna</b></th>
-            <th><b>Nama Pengguna</b></th>
+            <th><b>ID User Pengguna</b></th>
+            <th><b>Nama User Pengguna</b></th>
             <th><b>Username</b></th>
             <th><b>Role</b></th>
             <th><b>Divisi</b></th>
@@ -23,7 +23,7 @@
                 <td>{{ ucfirst($pengguna->role) }}</td>
                 <td>{{ $pengguna->divisi ?? '-' }}</td>
                 <td>
-                    <img src="{{ $pengguna->foto ? asset('storage/' . $pengguna->foto) : asset('assets/images/users/default.jpg') }}"
+                    <img src="{{ $pengguna->foto ? asset('storage/' . $pengguna->foto) : asset('assets/images/pengguna/default.jpg') }}"
                         alt="Foto Pengguna" width="50" height="50" class="rounded">
                 </td>
                 @if ($type != 'export')

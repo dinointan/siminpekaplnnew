@@ -10,9 +10,8 @@ class Profile extends Model
     use HasFactory;
     protected $fillable = [
         'nama',
-        'telp',
-        'gender',
-        'alamat',
+        'username',
+        'password',
         'divisi',
         'foto',
         'user_id',
