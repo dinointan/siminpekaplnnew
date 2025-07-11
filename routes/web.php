@@ -55,7 +55,9 @@ Route::get('/perabotan/cetakqr/{kode}', [PerabotanController::class, 'cetakqr'])
 
 
 // });
-Route::get('/perabotan/{kode}/detail', [PerabotanController::class, 'publicDetail'])->name('perabotan.public.detail');
+// Route::get('/perabotan/{kode}/detail', [PerabotanController::class, 'publicDetail'])->name('perabotan.public.detail');
+Route::get('/perabotan/detail/{id}', [PerabotanController::class, 'publicDetail'])->name('perabotan.public.detail');
+
 
 
 // Logout route
