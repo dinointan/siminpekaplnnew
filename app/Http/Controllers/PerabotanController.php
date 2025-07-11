@@ -133,21 +133,29 @@ class PerabotanController extends Controller
         return redirect()->route('perabotan.index')->with('status', 'Perabotan berhasil dihapus');
     }
 
-    public function scan(Request $request)
-    {
-        $url = $request->kode;
-        $kode = Str::before(Str::after($url, '/perabotan/'), '/detail');
-        $perabot = Perabotan::where('kode', $kode)->first();
+ public function scan(Request $request)
+{
+    $url = $request->kode;
 
-        if ($perabot) {
-            return response()->json([
-                'status' => 'success',
-                'url' => route('perabotan.public.detail', ['id' => $perabot->id])
-            ]);
-        }
+    // Ambil ID dari URL
+    $id = Str::after($url, '/perabotan/detail/');
 
-        return response()->json(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+    if (!is_numeric($id)) {
+        return response()->json(['status' => 'error', 'message' => 'ID tidak valid']);
     }
+
+    $perabot = Perabotan::find($id);
+
+    if ($perabot) {
+        return response()->json([
+            'status' => 'success',
+            'url' => route('perabotan.public.detail', ['id' => $perabot->id])
+        ]);
+    }
+
+    return response()->json(['status' => 'error', 'message' => 'Data tidak ditemukan']);
+}
+
 
     public function detailByKode($kode)
     {

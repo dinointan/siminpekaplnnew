@@ -13,20 +13,27 @@ class ScanController extends Controller
         return view('scan.index'); // Tampilan halaman scan
     }
 
-    public function result(Request $request)
+   public function result(Request $request)
 {
-    $content = $request->input('kode');
+    $content = $request->input('kode'); // 'kode' di JS kamu
 
-    // Ambil ID dari URL hasil QR Code
-    if (Str::contains($content, '/perabotan/detail/')) {
-        $id = Str::afterLast($content, '/');
-        $perabotan = \App\Models\Perabotan::find($id);
-    } else {
+    if (!Str::contains($content, '/perabotan/detail/')) {
         return response()->json([
             'status' => 'error',
             'message' => 'Format QR tidak dikenali'
         ]);
     }
+
+    $id = (int) Str::afterLast($content, '/'); // Ambil ID
+
+    if (!is_numeric($id) || $id <= 0) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'ID tidak valid'
+        ]);
+    }
+
+    $perabotan = Perabotan::with('lokasi')->find($id);
 
     if (!$perabotan) {
         return response()->json([
@@ -44,5 +51,7 @@ class ScanController extends Controller
         ]
     ]);
 }
+
+
 
 }
