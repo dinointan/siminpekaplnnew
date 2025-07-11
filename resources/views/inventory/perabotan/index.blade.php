@@ -112,73 +112,48 @@
     </div>
 
 
-    <script>
-        $(document).ready(function() {
-            // Inisialisasi DataTable
-            $('#furnitures-table').DataTable({
-                language: datatableLanguageOptions,
-                autoWidth: false,
-                order: [
-                    [1, 'asc']
-                ],
-                columnDefs: [{
-                    targets: [6],
-                    orderable: false,
-                    searchable: false
-
-                }]
-            });
-
-            // Fokus ke kolom pencarian
-            $('input[type="search"]').focus();
-
-            $(document).on('click', '.detail-btn', function() {
-                const kode = $(this).data('kode');
-
-                $('#id_perabotan').val($(this).data('id_perabotan'));
-                $('#kode_perabotan').val(kode);
-                $('#nama_perabotan').val($(this).data('nama_perabotan'));
-                $('#kategori').val($(this).data('kategori'));
-                $('#tahun').val($(this).data('tahun'));
-                $('#lokasi').val($(this).data('lokasi'));
-                $('#kondisi_perabotan').val($(this).data('kondisi_perabotan'));
-                const foto = $(this).data('foto');
-                if (foto) {
-                    $('#foto').attr('src', '/assets/images/items/' + foto);
-                } else {
-                    $('#foto').attr('src', '');
-                }
-
-                // Memuat QR Code berdasarkan kode
-                $('#barcode_area').html($(this).data('qrcode'));
-
-            });
-
+   <script>
+    $(document).ready(function() {
+        $('#furnitures-table').DataTable({
+            language: datatableLanguageOptions,
+            autoWidth: false,
+            order: [[1, 'asc']],
+            columnDefs: [{
+                targets: [6],
+                orderable: false,
+                searchable: false
+            }]
         });
 
-        document.querySelectorAll('.detail-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const kode = this.getAttribute('data-kode'); // ambil kode perabotan
+        $('input[type="search"]').focus();
 
-                // Isi href Cetak QR secara dinamis
-                const cetakLink = `/perabotan/cetakqr/${kode}`;
-                document.getElementById('cetak-qr-btn').setAttribute('href', cetakLink);
+        // Handler tombol detail
+        $(document).on('click', '.detail-btn', function() {
+            const id = $(this).data('id_perabotan');
 
-                // QR Code image
-                const qrCodeData = this.getAttribute('data-qrcode');
-                document.getElementById('modal-qrcode-img').src = qrCodeData;
-            });
+            $('#id_perabotan').val(id);
+            $('#kode_perabotan').val($(this).data('kode'));
+            $('#nama_perabotan').val($(this).data('nama_perabotan'));
+            $('#kategori').val($(this).data('kategori'));
+            $('#tahun').val($(this).data('tahun'));
+            $('#lokasi').val($(this).data('lokasi'));
+            $('#kondisi_perabotan').val($(this).data('kondisi_perabotan'));
+
+            const foto = $(this).data('foto');
+            $('#foto').attr('src', foto ? '/assets/images/items/' + foto : '');
+
+            const qrCodeData = $(this).data('qrcode');
+            $('#modal-qrcode-img').attr('src', qrCodeData);
+
+            // Ganti href tombol cetak
+            const cetakLink = `/perabotan/cetakqr/id/${id}`;
+            $('#cetak-qr-btn').attr('href', cetakLink);
         });
+    });
 
+    function exportData(type) {
+        window.location.href = "/perabotan/export?type=" + type;
+    }
+</script>
 
-        function exportData(type) {
-            window.location.href = "/perabotan/export?type=" + type;
-        }
-        document.querySelectorAll('.detail-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const qrCodeData = this.getAttribute('data-qrcode');
-                document.getElementById('modal-qrcode-img').src = qrCodeData;
-            });
-        });
-    </script>
 </x-layout>

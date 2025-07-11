@@ -181,6 +181,19 @@ class PerabotanController extends Controller
         return view('inventory.perabotan.cetakqr', compact('perabotan', 'qrCode'));
     }
 
+    public function cetakqrById($id)
+{
+    abort_unless(auth()->user()->role === 'admin', 403);
+
+    $perabotan = Perabotan::findOrFail($id);
+    $qrCode = QrCode::size(200)->generate(
+        route('perabotan.public.detail', ['id' => $perabotan->id])
+    );
+
+    return view('inventory.perabotan.cetakqr', compact('perabotan', 'qrCode'));
+}
+
+
     public function export(Request $request)
     {
         $type = $request->get('type');

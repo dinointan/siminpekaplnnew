@@ -49,7 +49,7 @@
 <body>
     <div class="container">
         <div class="qr-code">
-            {!! QrCode::size(120)->generate(url("public/perabotan/$perabotan->kode/detail")) !!}
+           {!! QrCode::size(120)->generate(route('perabotan.public.detail', ['id' => $perabotan->id])) !!}
         </div>
 
         <h4>SCAN ME</h4>

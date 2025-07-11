@@ -35,7 +35,7 @@
                 @if ($type != 'export')
                     <td style="width: 25%;" class="text-center">
                         @php
-                            $svg = QrCode::size(80)->generate(url("public/perabotan/$perabotan->kode/detail"));
+                           $svg = QrCode::size(80)->generate(route('perabotan.public.detail', ['id' => $perabotan->id]));
                             $qrCodeBase64 = base64_encode($svg);
                         @endphp
 

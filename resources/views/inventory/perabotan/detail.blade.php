@@ -18,7 +18,8 @@
             <div class="col-md-6 text-center">
                 <p><strong>QR Code:</strong></p>
                 <div>
-                    {!! QrCode::size(150)->generate($perabotan->kode) !!}
+                {!! QrCode::size(150)->generate(route('perabotan.public.detail', ['id' => $perabotan->id])) !!}
+
                 </div>
 
                 @if ($perabotan->foto)
