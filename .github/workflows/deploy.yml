@@ -1,4 +1,4 @@
-name: Auto Deploy to Hostinger
+name: Deploy to Hostinger
 
 on:
   push:
@@ -10,25 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p ${{ secrets.PORT }} ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
       - name: Deploy via SSH
-        run: |
-          ssh -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} << 'EOF'
-            cd /home/${{ secrets.USERNAME }}/public_html/siminpekaplnnew
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/public_html/siminpekaplnnew || exit 1
+
+            # Pastikan repo sudah di-clone
+            if [ ! -d .git ]; then
+              echo "Project belum di-clone! Silakan clone manual dari GitHub ke ~/public_html/siminpekaplnnew"
+              exit 1
+            fi
+
             git pull origin main
-            composer install --no-dev --optimize-autoloader
+
+            # Jalankan composer jika perlu
+            if [ ! -d vendor ]; then
+              php composer.phar install --no-interaction --prefer-dist --optimize-autoloader
+            fi
+
             php artisan migrate --force
-            php artisan config:clear
-            php artisan cache:clear
+            php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-          EOF
