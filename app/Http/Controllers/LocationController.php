@@ -38,7 +38,7 @@ class LocationController extends Controller
    */
   public function detail(Lokasi $lokasi): View
   {
-    return view('inventory.lokasi.detail', [
+    return view('inventory.lokasi.table', [
       'lokasi' => $lokasi,
       'kategori' => Kategori::all(),
       'type' => 'show'
