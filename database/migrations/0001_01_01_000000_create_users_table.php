@@ -16,16 +16,10 @@ return new class extends Migration {
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'supervisor', 'owner', 'user'])->default('pegawai');
+            $table->enum('role', ['admin', 'supervisor', 'owner', 'user', 'pegawai'])->default('pegawai');
             $table->rememberToken();
             $table->timestamps();
         });
-
-        // Schema::create('password_reset_tokens', function (Blueprint $table) {
-        //     $table->string('username')->primary();
-        //     $table->string('token');
-        //     $table->timestamp('created_at')->nullable();
-        // });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
@@ -42,9 +36,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('users');
     }
 };
