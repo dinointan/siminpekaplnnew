@@ -217,7 +217,7 @@
                             <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic"
                                 href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <img src="{{ asset('assets/images/pengguna/' . (auth()->user()->foto ?? 'default.png')) }}"
+                                <img src="{{ asset('assets/images/pengguna/' . (auth()->user()->foto ?? 'd1.jpg')) }}"
                                     alt="user" class="rounded-circle" width="31">
                                 <span class="fw-bold text-white mx-2">{{ auth()->user()->name }}</span>
                             </a>
