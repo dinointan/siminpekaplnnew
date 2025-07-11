@@ -70,6 +70,8 @@
 
                 {{-- QR Scan Section --}}
                 <div class="form-group text-center mt-4">
+                    <select id="cameraSelect" class="form-select mb-2" style="display: none;"></select>
+
                     <p class="text-muted mb-2">Atau Scan QR Code untuk melihat detail perabotan</p>
 
                     <video id="preview" width="300" height="220"
@@ -95,7 +97,6 @@
 
         scanner.addListener('scan', function(content) {
             console.log("QR Code terbaca:", content);
-
             fetch('/scan-result', {
                     method: 'POST',
                     headers: {
@@ -121,11 +122,24 @@
 
         let cameras = [];
 
-        // Buka Kamera
         document.getElementById('startCam').addEventListener('click', () => {
             Instascan.Camera.getCameras().then(function(availableCameras) {
                 if (availableCameras.length > 0) {
                     cameras = availableCameras;
+                    const select = document.getElementById('cameraSelect');
+                    select.innerHTML = '';
+
+                    // Tampilkan pilihan kamera
+                    cameras.forEach((camera, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.text = camera.name || `Camera ${index + 1}`;
+                        select.appendChild(option);
+                    });
+
+                    select.style.display = 'block';
+
+                    // Mulai dengan kamera pertama secara default
                     scanner.start(cameras[0]);
                     document.getElementById('preview').style.display = 'block';
                     document.getElementById('startCam').classList.add('d-none');
@@ -139,14 +153,24 @@
             });
         });
 
-        // Tutup Kamera
+        document.getElementById('cameraSelect').addEventListener('change', function() {
+            const selectedIndex = parseInt(this.value);
+            if (cameras[selectedIndex]) {
+                scanner.stop().then(() => {
+                    scanner.start(cameras[selectedIndex]);
+                });
+            }
+        });
+
         document.getElementById('stopCam').addEventListener('click', () => {
             scanner.stop();
             document.getElementById('preview').style.display = 'none';
             document.getElementById('startCam').classList.remove('d-none');
             document.getElementById('stopCam').classList.add('d-none');
+            document.getElementById('cameraSelect').style.display = 'none';
         });
     </script>
+
 </body>
 
 </html>

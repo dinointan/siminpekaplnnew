@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" style="min-width: 100vh !important;">
+<html lang="en" style="min-height: 100vh;">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <meta name="robots" content="noindex,nofollow">
+
     <title>PLN SIMINPEKA</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="20x26" href="/assets/images/Logo_PLN.png">
@@ -31,7 +33,83 @@
         .is_active {
             background-color: #27A9E3;
         }
+
+        @media (max-width: 768px) {
+            .left-sidebar {
+                position: absolute;
+                left: -260px;
+                z-index: 1001;
+                transition: all 0.3s;
+            }
+
+            .left-sidebar.show {
+                left: 0;
+            }
+        }
     </style>
+    <style>
+        /* Responsive Sidebar Layout */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            color: white;
+            transition: left 0.3s ease;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        /* Hide sidebar on small screen */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .toggle-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                margin: 1rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 769px) {
+            .toggle-btn {
+                display: none;
+            }
+        }
+    </style>
+
 </head>
 <script>
     // Auto dismiss alert setelah 3 detik
@@ -67,7 +145,7 @@
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
+    <div id="main-wrapper" class="mini-sidebar" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
         data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
         <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
@@ -254,6 +332,12 @@
                                 </ul>
                             </li>
                         @endif
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)"
+                                aria-expanded="false" onclick="document.getElementById('logout').submit()">
+                                <i class="mdi mdi-logout"></i><span class="hide-menu">Profil</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)"
                                 aria-expanded="false" onclick="document.getElementById('logout').submit()">
