@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        \App\Models\Profile::factory(1)->create();
-        \App\Models\Kategori::factory(5)->create();
-        \App\Models\Lokasi::factory(5)->create();
-        \App\Models\Perabotan::factory(5)->create();
+        // \App\Models\Profile::factory(1)->create();
+        // \App\Models\Kategori::factory(5)->create();
+        // \App\Models\Lokasi::factory(5)->create();
+        // \App\Models\Perabotan::factory(5)->create();
         // \App\Models\Perabotan::factory(5)->create();
     }
 }
