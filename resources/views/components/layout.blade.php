@@ -335,12 +335,6 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)"
                                 aria-expanded="false" onclick="document.getElementById('logout').submit()">
-                                <i class="mdi mdi-logout"></i><span class="hide-menu">Profil</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)"
-                                aria-expanded="false" onclick="document.getElementById('logout').submit()">
                                 <i class="mdi mdi-logout"></i><span class="hide-menu">Keluar</span>
                             </a>
                         </li>

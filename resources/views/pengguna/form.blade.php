@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-warning float-end rounded-2" href="{{ route('pengguna.index') }}">Kembali</a>
+                    <a class="btn btn-secondary float-end rounded-2" href="{{ route('pengguna.index') }}">Kembali</a>
                 </div>
                 <div class="card-body">
                     <form
@@ -18,7 +18,7 @@
                         <div class="form-group">
                             <label for="name">Nama <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                id="name" name="name" required>
+                                id="name" name="name" required value="{{ old('name', $pengguna->name ?? '') }}">
                             @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -29,12 +29,18 @@
                         <div class="form-group">
                             <label for="username">Username <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                id="username" name="username" required>
+                                id="username" name="username" required
+                                value="{{ old('username', $pengguna->username ?? '') }}">
                             @error('username')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" value="{{ old('email', $pengguna->email ?? '') }}"
+                                class="form-control" required>
                         </div>
 
                         <div class="form-group">
@@ -131,7 +137,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+                        <button type="submit" class="btn text-white btn-success mt-3">Simpan</button>
                     </form>
                 </div>
             </div>

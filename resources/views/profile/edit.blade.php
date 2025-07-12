@@ -5,7 +5,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-warning float-end rounded-2" href="/" tabindex="1">Kembali</a>
+                    <a class="btn btn-secondary float-end rounded-2" href="/" tabindex="1">Kembali</a>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('profile.update', $user) }}" enctype="multipart/form-data">

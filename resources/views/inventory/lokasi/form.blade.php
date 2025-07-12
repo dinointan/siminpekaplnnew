@@ -5,7 +5,7 @@
           <div class="col-md-6">
               <div class="card">
                   <div class="card-header">
-                      <a class="btn btn-warning float-end rounded-2" href="{{ route('lokasi.index') }}">Kembali</a>
+                      <a class="btn btn-secondary float-end rounded-2" href="{{ route('lokasi.index') }}">Kembali</a>
                   </div>
                   <div class="card-body">
                       <form
@@ -30,7 +30,7 @@
                               <div></div>
 
                           </div>
-                          <button type="submit" class="btn btn-primary">Simpan</button>
+                          <button type="submit" class="btn text-white btn-success">Simpan</button>
                       </form>
                   </div>
               </div>

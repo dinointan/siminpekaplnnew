@@ -9,10 +9,10 @@ class Pengguna extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
         'name',
         'username',
+        'email',
         'password',
         'role',
         'divisi',

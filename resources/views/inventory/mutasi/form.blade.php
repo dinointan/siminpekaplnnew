@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-warning float-end rounded-2" href="{{ route('mutasi.index') }}">Kembali</a>
+                    <a class="btn btn-secondary float-end rounded-2" href="{{ route('mutasi.index') }}">Kembali</a>
                     <div class="card-body">
                         <form id="form-mutasi"
                             action="{{ $type == 'create' ? route('mutasi.store') : route('mutasi.update', ['mutasi' => $mutasi->id]) }}"
@@ -117,28 +117,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <img src="/assets/images/mutasis/{{ $mutasi->foto ?? 'default.png' }}">
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="form-group">
-                                        <label for="foto" class="form-label">Foto <span class="text-muted">
-                                                (kosongkan
-                                                jika
-                                                tidak ingin
-                                                diubah)</span></label>
-                                        <input class="form-control @error('foto') is-invalid @enderror" type="file"
-                                            id="foto" name="foto">
-                                        @error('foto')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn  text-white btn-success">Simpan</button>
                         </form>
                     </div>
                 </div>

@@ -70,6 +70,13 @@
                                 <input type="text" id="modal_username" class="form-control" readonly>
                             </div>
                         </div>
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label"><strong>Email</strong></label>
+                            <div class="col-sm-9">
+                                <input type="text" id="modal_email" class="form-control" readonly>
+                            </div>
+                        </div>
+
 
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label"><strong>Role</strong></label>
@@ -116,6 +123,7 @@
                 $('#modal_id_pengguna').val($(this).data('id_pengguna') || '-');
                 $('#modal_nama_pengguna').val($(this).data('nama_pengguna') || '-');
                 $('#modal_username').val($(this).data('username') || '-');
+                $('#modal_email').val($(this).data('email') || '-');
                 $('#modal_role').val($(this).data('role') || '-');
                 $('#modal_divisi').val($(this).data('divisi') || '-');
 

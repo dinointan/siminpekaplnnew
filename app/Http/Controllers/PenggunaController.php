@@ -47,10 +47,12 @@ class PenggunaController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $pengguna->id,
+            'email' => 'required|email|unique:users,email,' . $pengguna->id,
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ];
+
 
         if ($request->filled('password')) {
             $rules['password'] = 'nullable|string|min:6|confirmed';
@@ -76,11 +78,13 @@ class PenggunaController extends Controller
         $pengguna->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'email' => $validated['email'],
             'password' => $request->filled('password') ? Hash::make($request->password) : $pengguna->password,
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
             'foto' => $foto,
         ]);
+
 
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
@@ -92,10 +96,11 @@ class PenggunaController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
         $foto = null;
@@ -111,6 +116,7 @@ class PenggunaController extends Controller
         User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
