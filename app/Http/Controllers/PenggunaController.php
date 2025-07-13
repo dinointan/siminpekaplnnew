@@ -54,6 +54,7 @@ class PenggunaController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ];
 
+
         if ($request->filled('password')) {
             $rules['password'] = 'nullable|string|min:6|confirmed';
         }
@@ -79,7 +80,6 @@ class PenggunaController extends Controller
         $pengguna->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
-            'email' => $validated['email'], // ✅ tambahkan ini
             'password' => $request->filled('password') ? Hash::make($request->password) : $pengguna->password,
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],

@@ -45,10 +45,12 @@
                             </div>
 
                             <div class="d-flex justify-content-end mt-4 mb-4 me-4">
-                                <a href="{{ route('profile.edit') }}"
-                                    class="btn btn-sm rounded-3 text-white btn-warning">
-                                    Ubah
-                                </a>
+                                @if (auth()->user()->role === 'pegawai')
+                                    <a href="{{ route('profile.edit') }}"
+                                        class="btn btn-sm rounded-3 text-white btn-warning">
+                                        Ubah
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>

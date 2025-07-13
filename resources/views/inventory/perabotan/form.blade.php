@@ -5,7 +5,8 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-warning float-end rounded-2" href="{{ route(name: 'perabotan.index') }}">Kembali</a>
+                    <a class="btn btn-secondary float-end rounded-2"
+                        href="{{ route(name: 'perabotan.index') }}">Kembali</a>
                 </div>
                 <div class="card-body">
                     <form id="form-perabotan"
@@ -28,7 +29,7 @@
                                     @enderror
                                     <div class="input-group-append">
                                         <button type="button" id="generate_kode"
-                                            class="input-group-text btn btn-primary text-white">Buat Kode</button>
+                                            class="input-group-text btn btn-warning text-white">Buat Kode</button>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +123,8 @@
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     @if (!empty($perabotan?->foto))
-                                        <img src="{{ asset('assets/images/items/' . $perabotan->foto) }}" width="100" id="img-preview">
+                                        <img src="{{ asset('assets/images/items/' . $perabotan->foto) }}" width="100"
+                                            id="img-preview">
                                     @endif
                                 </div>
                                 <div class="col-md-9">
@@ -140,7 +142,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn  text-white btn-success">Simpan</button>
                         </form>
                     </div>
                 </div>

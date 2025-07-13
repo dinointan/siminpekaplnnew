@@ -26,8 +26,8 @@
                         <button class="btn btn-sm rounded-3 text-white btn-success detail-btn" data-bs-toggle="modal"
                             data-bs-target="#detail-modal" data-id_pengguna="{{ $pengguna->id }}"
                             data-nama_pengguna="{{ $pengguna->name }}" data-username="{{ $pengguna->username }}"
-                            data-role="{{ $pengguna->role }}" data-divisi="{{ $pengguna->divisi ?? '-' }}"
-                            data-foto="{{ $pengguna->foto }}">
+                            data-email="{{ $pengguna->email }}" data-role="{{ $pengguna->role }}"
+                            data-divisi="{{ $pengguna->divisi ?? '-' }}" data-foto="{{ $pengguna->foto }}">
                             <i class="fas fa-info-circle"></i> Detail
                         </button>
                         <a href="{{ route('pengguna.edit', $pengguna) }}"
