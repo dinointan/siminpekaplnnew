@@ -38,6 +38,18 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
+                                value="{{ old('email', $pengguna->email) }}" required>
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+
+                        <div class="form-group">
                             <label for="role">Role <span class="text-danger">*</span></label>
                             <select class="form-select @error('role') is-invalid @enderror" name="role" required>
                                 <option value="">Pilih Role</option>

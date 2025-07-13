@@ -13,6 +13,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use App\Exports\PenggunaExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class PenggunaController extends Controller
 {
     public function index()
@@ -47,9 +48,10 @@ class PenggunaController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $pengguna->id,
+            'email' => 'required|email|unique:users,email,' . $pengguna->id,
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ];
 
         if ($request->filled('password')) {
@@ -57,6 +59,7 @@ class PenggunaController extends Controller
         }
 
         $validated = $request->validate($rules);
+
 
         $foto = $pengguna->foto; // Default: pakai foto lama
 
@@ -76,11 +79,13 @@ class PenggunaController extends Controller
         $pengguna->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'email' => $validated['email'], // ✅ tambahkan ini
             'password' => $request->filled('password') ? Hash::make($request->password) : $pengguna->password,
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
             'foto' => $foto,
         ]);
+
 
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
     }
@@ -92,10 +97,11 @@ class PenggunaController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:admin,pegawai',
             'divisi' => 'required|in:K3 Lingkungan dan Keamanan,Pelayanan Pelanggan dan Administrasi,Sales Retail,Teknik,Transaksi Energi Listrik',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096', // DITAMBAHKAN
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ]);
 
         $foto = null;
@@ -107,15 +113,18 @@ class PenggunaController extends Controller
             $file->move(public_path('assets/images/pengguna'), $filename);
             $foto = $filename;
         }
+        // dd($validated);
 
         User::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
             'foto' => $foto,
         ]);
+
 
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
@@ -135,7 +144,6 @@ class PenggunaController extends Controller
             // Jika gagal, redirect dengan pesan error
             return redirect()->route('kategori.index')->with('error', 'Terjadi kesalahan saat menghapus kategori.');
         }
-
     }
 
     public function export(Request $request)
