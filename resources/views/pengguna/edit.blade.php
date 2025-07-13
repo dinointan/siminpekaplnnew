@@ -131,7 +131,7 @@
                             @enderror
 
                             <div class="mt-3">
-                                <img src="/assets/images/pengguna/{{ $pengguna->foto ?? 'profile.jpg' }}"
+                                <img src="{{ $pengguna->foto ? asset('storage/pengguna/' . $pengguna->foto) : asset('assets/images/pengguna/profile.jpg') }}"
                                     width="100" id="img-preview" alt="Foto Pengguna">
                                 <small class="text-muted d-block">Kosongkan jika tidak ingin diubah. Ukuran disarankan
                                     1:1</small>

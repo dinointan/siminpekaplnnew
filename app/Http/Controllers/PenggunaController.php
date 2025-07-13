@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use App\Exports\PenggunaExport;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-
 class PenggunaController extends Controller
 {
     public function index()
@@ -61,25 +61,27 @@ class PenggunaController extends Controller
 
         $validated = $request->validate($rules);
 
-
         $foto = $pengguna->foto; // Default: pakai foto lama
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama
             if ($pengguna->foto && File::exists(public_path('assets/images/pengguna/' . $pengguna->foto))) {
-                File::delete(public_path('assets/images/pengguna/' . $pengguna->foto));
+                // File::delete(public_path('assets/images/pengguna/' . $pengguna->foto));
+                Storage::delete('public/pengguna/' . $pengguna->foto);
             }
 
             $file = $request->file('foto');
             $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
             $filename = time() . '_' . $originalName;
-            $file->move(public_path('assets/images/pengguna'), $filename);
+            // $file->move(public_path('assets/images/pengguna'), $filename);
+            $file->storeAs('public/pengguna', $filename);
             $foto = $filename;
         }
 
         $pengguna->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
+            'email' => $validated['email'],
             'password' => $request->filled('password') ? Hash::make($request->password) : $pengguna->password,
             'role' => $validated['role'],
             'divisi' => $validated['divisi'],
@@ -110,10 +112,9 @@ class PenggunaController extends Controller
             $file = $request->file('foto');
             $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
             $filename = time() . '_' . $originalName;
-            $file->move(public_path('assets/images/pengguna'), $filename);
+           $file->storeAs('public/pengguna', $filename);
             $foto = $filename;
         }
-        // dd($validated);
 
         User::create([
             'name' => $validated['name'],
@@ -125,7 +126,6 @@ class PenggunaController extends Controller
             'foto' => $foto,
         ]);
 
-
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
@@ -133,7 +133,7 @@ class PenggunaController extends Controller
     {
         // Jika ada file foto, hapus dari direktori
         if ($pengguna->foto && $pengguna->foto !== '') {
-            File::delete(public_path('assets/images/pengguna/' . $pengguna->foto));
+           Storage::delete('public/pengguna/' . $pengguna->foto);
         }
 
         try {
@@ -144,6 +144,7 @@ class PenggunaController extends Controller
             // Jika gagal, redirect dengan pesan error
             return redirect()->route('kategori.index')->with('error', 'Terjadi kesalahan saat menghapus kategori.');
         }
+
     }
 
     public function export(Request $request)

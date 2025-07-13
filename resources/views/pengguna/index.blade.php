@@ -129,7 +129,7 @@
 
                 const foto = $(this).data('foto');
                 if (foto) {
-                    $('#foto').attr('src', '/assets/images/pengguna/' + foto);
+                    $('#foto').attr('src', '/storage/pengguna/' + foto);
                 } else {
                     $('#foto').attr('src', '');
                 }
