@@ -73,8 +73,9 @@ Route::get('/perabotan/export', [PerabotanController::class, 'export'])->name('p
 
 // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     Route::group(['prefix' => 'inventory'], function () {
         Route::resource('kategori', CategoryController::class)->except('show');
