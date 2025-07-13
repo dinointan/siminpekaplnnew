@@ -23,8 +23,8 @@
                 <td>{{ ucfirst($pengguna->role) }}</td>
                 <td>{{ $pengguna->divisi ?? '-' }}</td>
                 <td>
-                    <img src="{{ $pengguna->foto ? asset('storage/' . $pengguna->foto) : asset('assets/images/pengguna/default.jpg') }}"
-                        alt="Foto Pengguna" width="50" height="50" class="rounded">
+                   <img src="{{ $pengguna->foto ? asset('storage/pengguna/' . $pengguna->foto) : asset('assets/images/pengguna/default.jpg') }}"
+    alt="Foto Pengguna" width="50" height="50" class="rounded">
                 </td>
                 @if ($type != 'export')
                     <td class="text-right" style="width: 25%;">
