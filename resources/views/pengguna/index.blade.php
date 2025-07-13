@@ -118,6 +118,10 @@
                 ordering: true
             });
 
+            const foto = $(this).data('foto');
+console.log("Foto:", foto);
+
+
             // Event listener tombol detail (versi jQuery)
             $(document).on('click', '.detail-btn', function() {
                 $('#modal_id_pengguna').val($(this).data('id_pengguna') || '-');

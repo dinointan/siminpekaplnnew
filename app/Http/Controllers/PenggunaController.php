@@ -74,7 +74,7 @@ class PenggunaController extends Controller
             $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
             $filename = time() . '_' . $originalName;
             // $file->move(public_path('assets/images/pengguna'), $filename);
-            $file->storeAs('public/pengguna', $filename);
+            $file->storeAs('pengguna', $filename);
             $foto = $filename;
         }
 
@@ -112,7 +112,7 @@ class PenggunaController extends Controller
             $file = $request->file('foto');
             $originalName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
             $filename = time() . '_' . $originalName;
-           $file->storeAs('public/pengguna', $filename);
+           $file->storeAs('pengguna', $filename);
             $foto = $filename;
         }
 
