@@ -119,7 +119,7 @@
             });
 
             const foto = $(this).data('foto');
-console.log("Foto:", foto);
+                console.log("Foto:", foto);
 
 
             // Event listener tombol detail (versi jQuery)
