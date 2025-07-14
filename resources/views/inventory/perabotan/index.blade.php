@@ -112,48 +112,53 @@
     </div>
 
 
-   <script>
-    $(document).ready(function() {
-        $('#furnitures-table').DataTable({
-            language: datatableLanguageOptions,
-            autoWidth: false,
-            order: [[1, 'asc']],
-            columnDefs: [{
-                targets: [6],
-                orderable: false,
-                searchable: false
-            }]
+    <script>
+        $(document).ready(function() {
+            $('#furnitures-table').DataTable({
+                language: datatableLanguageOptions,
+                autoWidth: false,
+                order: [
+                    [1, 'asc']
+                ],
+                columnDefs: [{
+                    targets: [6],
+                    orderable: false,
+                    searchable: false
+                }]
+            });
+
+            $('input[type="search"]').focus();
+
+            // Handler tombol detail
+            $(document).on('click', '.detail-btn', function() {
+                const id = $(this).data('id_perabotan');
+
+                $('#id_perabotan').val(id);
+                $('#kode_perabotan').val($(this).data('kode'));
+                $('#nama_perabotan').val($(this).data('nama_perabotan'));
+                $('#kategori').val($(this).data('kategori'));
+                $('#tahun').val($(this).data('tahun'));
+                $('#lokasi').val($(this).data('lokasi'));
+                $('#kondisi_perabotan').val($(this).data('kondisi_perabotan'));
+
+                const foto = $(this).data('foto');
+                if (foto) {
+                    $('#foto').attr('src', '/storage/perabotan/' + foto);
+                } else {
+                    $('#foto').attr('src', '');
+                }
+                const qrCodeData = $(this).data('qrcode');
+                $('#modal-qrcode-img').attr('src', qrCodeData);
+
+                // Ganti href tombol cetak
+                const cetakLink = `/perabotan/cetakqr/id/${id}`;
+                $('#cetak-qr-btn').attr('href', cetakLink);
+            });
         });
 
-        $('input[type="search"]').focus();
-
-        // Handler tombol detail
-        $(document).on('click', '.detail-btn', function() {
-            const id = $(this).data('id_perabotan');
-
-            $('#id_perabotan').val(id);
-            $('#kode_perabotan').val($(this).data('kode'));
-            $('#nama_perabotan').val($(this).data('nama_perabotan'));
-            $('#kategori').val($(this).data('kategori'));
-            $('#tahun').val($(this).data('tahun'));
-            $('#lokasi').val($(this).data('lokasi'));
-            $('#kondisi_perabotan').val($(this).data('kondisi_perabotan'));
-
-            const foto = $(this).data('foto');
-            $('#foto').attr('src', foto ? '/assets/images/items/' + foto : '');
-
-            const qrCodeData = $(this).data('qrcode');
-            $('#modal-qrcode-img').attr('src', qrCodeData);
-
-            // Ganti href tombol cetak
-            const cetakLink = `/perabotan/cetakqr/id/${id}`;
-            $('#cetak-qr-btn').attr('href', cetakLink);
-        });
-    });
-
-    function exportData(type) {
-        window.location.href = "/perabotan/export?type=" + type;
-    }
-</script>
+        function exportData(type) {
+            window.location.href = "/perabotan/export?type=" + type;
+        }
+    </script>
 
 </x-layout>
