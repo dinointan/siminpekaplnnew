@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/u817937093/domains/plnsiminpeka.site/laravel-siminpekapln || exit 1
+            cd /home/u817937093/domains/plnsiminpeka.site/siminpekaplnnew || exit 1
 
             # Pastikan repo sudah di-clone
             if [ ! -d .git ]; then
