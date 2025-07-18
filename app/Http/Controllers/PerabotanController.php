@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PerabotanController extends Controller
@@ -101,6 +102,10 @@ $request->foto->storeAs('public/perabotan', $filename);
             'keterangan' => 'required|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096'
         ]);
+
+        if ($request->hasFile('foto') && $perabotan->foto) {
+    Storage::delete('public/perabotan/' . $perabotan->foto);
+}
 
         $nama_foto = $perabotan->foto;
         if ($request->hasFile('foto')) {

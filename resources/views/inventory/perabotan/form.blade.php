@@ -122,11 +122,10 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                 @if (!empty($perabotan?->foto))
-    <img src="{{ asset('storage/perabotan/' . $perabotan->foto) }}" width="100" id="img-preview">
-@endif
+    <img src="{{ isset($perabotan) && $perabotan->foto ? asset('storage/perabotan/' . $perabotan->foto) : '#' }}" 
+         width="100" id="img-preview" style="{{ isset($perabotan) && $perabotan->foto ? '' : 'display: none;' }}">
+</div>
 
-                                </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
                                         <label for="foto" class="form-label">Foto <span class="text-muted">(kosongkan
@@ -160,16 +159,17 @@
                     $('#kode').val(generateCode());
                 });
 
-                $('#foto').change(function() {
-                    const file = this.files[0];
-                    if (file) {
-                        const fileReader = new FileReader();
-                        fileReader.onload = function(e) {
-                            $('#img-preview').attr('src', e.target.result);
-                        }
-                        fileReader.readAsDataURL(file);
-                    }
-                });
+              $('#foto').change(function() {
+    const file = this.files[0];
+    if (file) {
+        const fileReader = new FileReader();
+        fileReader.onload = function(e) {
+            $('#img-preview').attr('src', e.target.result).show();
+        }
+        fileReader.readAsDataURL(file);
+    }
+});
+
 
                 $('#create-category-btn').click(function() {
                     const kategori = prompt('Masukkan nama kategori baru');
