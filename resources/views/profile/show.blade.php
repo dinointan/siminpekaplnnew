@@ -10,8 +10,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="/assets/images/users/{{ $user->picture }}" class="img-fluid rounded-3" alt=""
-                                style="width: 100% !important;">
+                            <img src="{{ asset('storage/pengguna/' . $user->picture) }}" class="img-fluid rounded-3" alt=""
+    style="width: 100% !important;">
                         </div>
                         {{-- Kolom Form --}}
                         <div class="col-md-9">
