@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="{{ asset('storage/pengguna/' . ($user->picture ?? 'd1.jpg')) }}"
+                            <img src="{{ asset('storage/pengguna/' . (auth()->user()->foto ?? 'd1.jpg')) }}"
                                 class="img-fluid rounded-3" alt="Foto Profil" style="max-width: 100%; height: auto;">
 
                         </div>

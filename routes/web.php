@@ -80,7 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'inventory'], function () {
         Route::resource('kategori', CategoryController::class)->except('show');
         Route::resource('lokasi', LocationController::class);
-        Route::resource('mutasi', MutasiPerabotanController::class);
+        // Route::resource('mutasi', MutasiPerabotanController::class);
 
 
     });
