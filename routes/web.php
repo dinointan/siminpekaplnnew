@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pengguna', PenggunaController::class)->except('show')->middleware(IsSupervisor::class);
     Route::get('/pengguna/{pengguna}', [PenggunaController::class, 'show']);
     Route::get('/pengguna/{pengguna}/edit', [PenggunaController::class, 'edit'])->name('pengguna.edit');
-    Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    // Route::put('/pengguna/{pengguna}', [PenggunaController::class, 'update'])->name('pengguna.update');
     Route::delete('/pengguna/{pengguna}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
 
 

@@ -10,8 +10,9 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img src="{{ asset('storage/pengguna/' . $user->picture) }}" class="img-fluid rounded-3" alt=""
-    style="width: 100% !important;">
+                            <img src="{{ asset('storage/pengguna/' . ($user->picture ?? 'd1.jpg')) }}"
+                                class="img-fluid rounded-3" alt="Foto Profil" style="max-width: 100%; height: auto;">
+
                         </div>
                         {{-- Kolom Form --}}
                         <div class="col-md-9">
@@ -24,8 +25,7 @@
                                     </div>
                                     <div class="form-group mb-4">
                                         <label class="form-label"><b>Username</b></label>
-                                        <input type="text" class="form-control" value="{{ $user->username }}"
-                                            readonly>
+                                        <input type="text" class="form-control" value="{{ $user->username }}" readonly>
                                     </div>
                                 </div>
                                 {{-- Kolom Kanan --}}
