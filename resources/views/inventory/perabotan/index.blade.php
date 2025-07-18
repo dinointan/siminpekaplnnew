@@ -142,11 +142,12 @@
                 $('#kondisi_perabotan').val($(this).data('kondisi_perabotan'));
 
                 const foto = $(this).data('foto');
-                if (foto) {
-                    $('#foto').attr('src', '/storage/perabotan/' + foto);
-                } else {
-                    $('#foto').attr('src', '');
-                }
+if (foto) {
+    $('#foto').attr('src', '/storage/perabotan/' + foto);
+} else {
+    $('#foto').attr('src', '');
+}
+
                 const qrCodeData = $(this).data('qrcode');
                 $('#modal-qrcode-img').attr('src', qrCodeData);
 

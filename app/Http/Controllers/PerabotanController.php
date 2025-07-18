@@ -103,7 +103,9 @@ class PerabotanController extends Controller
         $nama_foto = $perabotan->foto;
         if ($request->hasFile('foto')) {
             $filename = time() . '.' . $request->foto->extension();
-            $request->foto->move(public_path('assets/images/items'), $filename);
+        $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $request->foto->getClientOriginalName());
+        $request->foto->storeAs('public/perabotan', $filename);
+
             $nama_foto = $filename;
         }
 
