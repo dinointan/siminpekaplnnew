@@ -24,7 +24,7 @@
 
                 @if ($perabotan->foto)
                     <p class="mt-3"><strong>Foto Perabotan:</strong></p>
-                    <img src="{{ asset('assets/images/items/' . $perabotan->foto) }}" alt="Foto Perabotan"
+                    <img src="{{ asset('storage/perabotan/' . $perabotan->foto) }}" alt="Foto Perabotan"
                         class="img-fluid rounded shadow" style="max-height: 200px;">
                 @endif
             </div>

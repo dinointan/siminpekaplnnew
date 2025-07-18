@@ -122,10 +122,10 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                    @if (!empty($perabotan?->foto))
-                                        <img src="{{ asset('assets/images/items/' . $perabotan->foto) }}" width="100"
-                                            id="img-preview">
-                                    @endif
+                                 @if (!empty($perabotan?->foto))
+    <img src="{{ asset('storage/perabotan/' . $perabotan->foto) }}" width="100" id="img-preview">
+@endif
+
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
